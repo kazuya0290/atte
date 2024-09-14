@@ -1,0 +1,130 @@
+.admin__table {
+    margin-top: 16px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin__row {
+    border: 1px solid #E0DFDE;
+}
+
+.admin__label {
+    padding: 16px 8px;
+}
+
+.admin__table {
+    width: 80%;
+    /* テーブルの幅を調整 */
+    margin: 0 auto;
+    /* 中央に配置 */
+    border-collapse: collapse;
+    /* ボーダーを一つにまとめる */
+}
+
+.admin__table th,
+.admin__table td {
+    padding: 15px;
+    text-align: center;
+    /* テーブル内のテキストを中央に配置 */
+}
+
+.admin__table th {
+    background-color: #289ADC;
+    color: white;
+}
+
+.admin__table tr:nth-child(odd) td {
+    background-color: #FFFFFF;
+}
+
+.admin__table td {
+    background-color: #EEEEEE;
+    text-align: center;
+}
+
+.pagination {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.pagination a:hover,
+.pagination a:focus {
+    background-color: #e9ecef;
+}
+
+.pagination .active {
+    background-color: #D3def1;
+    color: white;
+    border: 1px solid #007bff;
+}
+
+.pagination .disabled {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+.current-date {
+    font-weight: bold;
+}
+
+.prev-day {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.next-day {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.calendar-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.calendar-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendar-navigation a,
+.calendar-navigation span {
+    margin: 0 10px;
+}
+
+.date-picker-form {
+    position: absolute;
+    top: 0;
+    right: 50px;
+    margin-right: 100px;
+}
+
+.date-picker-form label {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.date-picker-form input[type="date"] {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}

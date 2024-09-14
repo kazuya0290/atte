@@ -107,5 +107,5 @@ return [
     */
 
     'password_timeout' => 10800,
-
+    'failed' => 'ログイン情報が登録されていません。'
 ];
