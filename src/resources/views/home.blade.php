@@ -129,13 +129,13 @@
           .then(data => {
               if (data.success) {
                   document.getElementById('total_time').textContent = data.total;
-                  alert('勤務終了時刻が記録されました');
+                  alert('勤務終了時刻が記録されました、ログアウトをお忘れなく。');
               } else {
-                  alert('勤務終了時刻が記録されました');
+                  alert('勤務終了時刻が記録されました、ログアウトをお忘れなく。');
               }
           }).catch(error => {
               console.error('Error:', error);
-              alert('勤務終了時刻が記録されました');
+              alert('勤務終了時刻が記録されました、ログアウトをお忘れなく。');
           });
     });
 

@@ -18,9 +18,9 @@ class CreateAttendancesTable extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->timestamp('start_time');
-            $table->timestamp('end_time')->nullable(); // 勤務終了時刻はNULLを許容
-            $table->integer('rest_time')->default(0); // 休憩時間はNULLを許容
-            $table->integer('total')->default(0); // 総労働時間はNULLを許容せずデフォルト値0
+            $table->timestamp('end_time')->nullable(); 
+            $table->integer('rest_time')->default(0); 
+            $table->integer('total')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

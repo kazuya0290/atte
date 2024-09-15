@@ -34,7 +34,7 @@ class AttendanceController extends Controller
             $attendance = new Attendance();
             $attendance->user_id = Auth::id();
             $attendance->name = Auth::user()->name;
-            $attendance->start_time = now();
+            $attendance->start_time = Carbon::now('Asia/Tokyo');
             $attendance->end_time = null;
             $attendance->rest_time = 0; 
             $attendance->total = 0;     
@@ -71,7 +71,8 @@ class AttendanceController extends Controller
             return response()->json([
                 'success' => true,
                 'end_time' => $attendance->end_time->format('H:i:s'),
-                'total' => gmdate('H:i:s', $attendance->total) 
+                'total' => gmdate('H:i:s', $attendance->total),
+                'rest_time' => gmdate('H:i:s', $attendance->rest_time)
             ]);
         }
 
