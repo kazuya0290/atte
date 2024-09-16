@@ -16,10 +16,8 @@
     font-size: 24px;
 }
 
-body {
-    background-image: url('/images/haikei.jpg');
-    background-size: cover;
-    background-position: center;
+.header__logo:hover {
+    text-decoration: underline;
 }
 
 .container {

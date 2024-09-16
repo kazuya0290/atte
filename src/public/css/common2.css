@@ -16,10 +16,14 @@
 }
 
 .header__logo {
-    color: #000000;
+    color: #000;
     text-decoration: none;
     font-weight: bold;
     font-size: 24px;
+}
+
+.header__logo:hover {
+    text-decoration: underline;
 }
 
 .header-nav {
@@ -34,10 +38,8 @@
     text-decoration: none;
 }
 
-body {
-    background-image: url('/images/haikei.jpg');
-    background-size: cover;
-    background-position: center;
+.header-nav__link:hover {
+    text-decoration: underline;
 }
 
 .footer {
