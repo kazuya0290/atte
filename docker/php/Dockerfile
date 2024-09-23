@@ -1,20 +1,27 @@
-FROM php:7.4.9-fpm
+FROM php:7.4.9-fpm 
 
-COPY ./docker/php/php.ini /usr/local/etc/php/
 
-RUN apt update \
-    && apt install -y default-mysql-client zlib1g-dev libzip-dev unzip \
+RUN apt-get update && apt-get install -y nginx
+
+
+COPY php.ini /usr/local/etc/php/
+
+
+RUN apt-get install -y default-mysql-client zlib1g-dev libzip-dev unzip curl \
     && docker-php-ext-install pdo_mysql zip
 
-# Composerのインストール
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer self-update
 
-RUN ls -la /usr/local/etc/php/
 
-# 作業ディレクトリの設定
 WORKDIR /var/www
 
-# プロジェクトファイルをコピー
+
 COPY . /var/www
+
+
+EXPOSE 80
+
+
+CMD ["sh", "-c", "service nginx start && php-fpm"]
