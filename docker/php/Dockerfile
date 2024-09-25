@@ -17,17 +17,17 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer self-update
 
-# アプリケーションソースをコピー
-COPY . /var/www
-
 # WORKDIRを設定
 WORKDIR /var/www
+
+# アプリケーションソースをコピー
+COPY . /var/www
 
 # アクセス権限の設定
 RUN chmod 777 -R ./
 
-# Composerで依存関係をインストールし、エラーログを取得
-RUN composer install --no-dev --optimize-autoloader 2>&1 | tee composer-install.log
+# Composerで依存関係をインストール
+RUN composer install --no-dev --optimize-autoloader
 
 # アプリケーションキーの生成
 RUN php artisan key:generate --no-interaction
