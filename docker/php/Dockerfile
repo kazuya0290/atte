@@ -16,13 +16,20 @@ COPY ./src /var/www/html
 
 WORKDIR /var/www/html
 
+# Composerのインストール
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Composerで依存関係をインストール
+RUN composer install --no-dev --optimize-autoloader
+
 # アプリケーションキーの生成と設定
 RUN php artisan key:generate
 
 # アクセス権限は適宜変えてください。
-RUN chmod 777 -R ./
+RUN chmod -R 777 ./
 
-RUN php artisan migrate
+# データベースのマイグレーション
+RUN php artisan migrate --force
 
 # ポートのエクスポート
 EXPOSE 80
