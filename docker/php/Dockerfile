@@ -19,4 +19,4 @@ COPY . /var/www
 # Expose the port
 EXPOSE 80
 
-CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+CMD ["php-fpm", "-D", "&&", "nginx", "-g", "daemon off;"]
