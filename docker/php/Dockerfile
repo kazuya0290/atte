@@ -16,7 +16,13 @@ COPY ./src /var/www/html
 
 WORKDIR /var/www/html
 
-# ここに他のコマンドを追加
+# アプリケーションキーの生成と設定
+RUN php artisan key:generate
+
+# アクセス権限は適宜変えてください。
+RUN chmod 777 -R ./
+
+RUN php artisan migrate
 
 # ポートのエクスポート
 EXPOSE 80
