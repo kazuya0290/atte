@@ -24,7 +24,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN composer install --no-dev --optimize-autoloader
 
 # アプリケーションキーの生成と設定
-RUN php artisan key:generate
+RUN php artisan key:generate --no-interaction
 
 # アクセス権限は適宜変えてください。
 RUN chmod -R 777 ./ 
