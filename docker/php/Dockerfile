@@ -1,8 +1,9 @@
 # ベースイメージを指定
 FROM php:8.2.10-fpm
 
+# 必要なパッケージのインストール
 RUN apt update \
-    && apt install -y nginx \
+    && apt install -y nginx unzip \
     && docker-php-ext-install pdo pdo_mysql
 
 # php.iniの設定
@@ -26,7 +27,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN php artisan key:generate
 
 # アクセス権限は適宜変えてください。
-RUN chmod -R 777 ./
+RUN chmod -R 777 ./ 
 
 # データベースのマイグレーション
 RUN php artisan migrate --force
