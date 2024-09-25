@@ -1,63 +1,58 @@
 # ベースイメージを指定
 FROM php:8.2.10-apache
 
+# 必要なパッケージのインストール
 RUN apt update \
-        && apt install -y \
-            g++ \
-            libicu-dev \
-            libpq-dev \
-            libzip-dev \
-            zip \
-            zlib1g-dev \
-            npm \
-            nodejs \
-            vim \
-        && docker-php-ext-install \
-            intl \
-            opcache \
-            pdo \
-            pdo_pgsql \
-            pgsql \
-            pdo_mysql
+    && apt install -y \
+        g++ \
+        libicu-dev \
+        libpq-dev \
+        libzip-dev \
+        zip \
+        zlib1g-dev \
+        npm \
+        nodejs \
+        vim \
+    && docker-php-ext-install \
+        intl \
+        opcache \
+        pdo \
+        pdo_pgsql \
+        pgsql \
+        pdo_mysql
+
 # Composerのインストール
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-COPY --from=composer /usr/bin/composer /usr/bin/composer
 
+# 作業ディレクトリを設定
 WORKDIR /var/www/html
 
-# PHP拡張機能の有効化
-RUN docker-php-ext-install pdo_mysql zip
+# ソースをルートディレクトリにコピー（パスを確認）
+COPY ./src /var/www/html
 
-# ソースをルートディレクトリにコピー（パスは適宜変えてください。）
-COPY ./docker/shop/src /var/www/html
-
-# apacheの設定ファイルをコピー（パスは適宜変えてください。）
+# Apacheの設定ファイルをコピー（パスを確認）
 COPY ./docker/shop/apache/default.conf /etc/apache2/sites-enabled/000-default.conf
 
-# その他コピー
-COPY ./php.ini-development /usr/local/etc/php/php.ini-development
-COPY --from=composer /usr/bin/composer /usr/bin/composer
-
-RUN apt update  
-RUN apt install sudo  
+# php.iniを設定（パスを確認）
+COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 
 # Composerで依存関係をインストール
-RUN sudo composer install
+RUN composer install --no-dev --optimize-autoloader
 
-RUN echo ServerName localhost >> /etc/apache2/apache2.conf
-
-# アプリケーションキーの生成と設定
+# Laravelのアプリケーションキーを生成
 RUN php artisan key:generate
 
-# アクセス権限は適宜変えてください。
-RUN chmod 777 -R ./
+# マイグレーションを実行
+RUN php artisan migrate --force
 
-RUN php artisan migrate
+# Laravelのキャッシュとログフォルダに書き込み権限を設定
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # ポートのエクスポート
 EXPOSE 80
 
+# Apacheのrewriteモジュールを有効化
 RUN a2enmod rewrite
 
-# コンテナ起動時にApacheを実行
+# Apacheを起動
 CMD ["apache2-foreground"]
