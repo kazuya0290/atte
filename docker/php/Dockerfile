@@ -1,27 +1,22 @@
 # ベースイメージを指定
 FROM php:8.2.10-fpm
 
-# php.iniの設定
-COPY ./docker/php/php.ini /usr/local/etc/php/
-
+# 必要なパッケージのインストール
 RUN apt update \
   && apt install -y default-mysql-client zlib1g-dev libzip-dev unzip \
   && docker-php-ext-install pdo_mysql zip
 
-RUN curl -sS https://getcomposer.org/installer | php \
-  && mv composer.phar /usr/local/bin/composer \
-  && composer self-update
+# php.iniの設定
+COPY ./docker/php/php.ini /usr/local/etc/php/
 
-# Nginxの設定ファイルをコピー
-COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+# Composerのインストール
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+  && composer self-update
 
 # アプリケーションソースをコピー
 COPY ./src /var/www/html
 
 WORKDIR /var/www/html
-
-# Composerのインストール
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Composerで依存関係をインストール
 RUN composer install --no-dev --optimize-autoloader
