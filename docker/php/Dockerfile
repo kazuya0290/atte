@@ -14,6 +14,8 @@ RUN curl -sS https://getcomposer.org/installer | php \
     
 RUN chmod 777 -R ./
 
+RUN php artisan key:generate
+
 WORKDIR /var/www
 
 COPY . /var/www
