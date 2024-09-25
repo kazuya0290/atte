@@ -11,6 +11,7 @@ RUN apt-get update \
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer self-update
+RUN composer install --no-dev --optimize-autoloader
 
 WORKDIR /var/www
 
