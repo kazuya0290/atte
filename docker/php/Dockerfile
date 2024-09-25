@@ -12,8 +12,6 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer self-update
 
-RUN composer install --prefer-dist --no-scripts --no-dev --optimize-autoloader
-
 WORKDIR /var/www
 
 COPY . /var/www
