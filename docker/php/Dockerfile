@@ -26,8 +26,8 @@ WORKDIR /var/www
 # アクセス権限の設定
 RUN chmod 777 -R ./
 
-# Composerで依存関係をインストール
-RUN composer install --no-dev --optimize-autoloader
+# Composerで依存関係をインストールし、エラーログを取得
+RUN composer install --no-dev --optimize-autoloader 2>&1 | tee composer-install.log
 
 # アプリケーションキーの生成
 RUN php artisan key:generate --no-interaction
