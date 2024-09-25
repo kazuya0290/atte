@@ -32,6 +32,8 @@ RUN composer install --no-dev --optimize-autoloader
 # アプリケーションキーの生成
 RUN php artisan key:generate --no-interaction
 
+RUN ls -la /var/www
+
 # Expose the port
 EXPOSE 80
 
