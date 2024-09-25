@@ -2,7 +2,7 @@
 FROM php:7.4.9-fpm
 
 # Nginx をインストール
-RUN apt-get update && apt-get install -y nginx
+RUN apt-get update && apt-get install -y nginx gettext-base
 
 # PHP 設定ファイルをコンテナ内の適切な場所にコピー
 COPY ./docker/php/php.ini /usr/local/etc/php/
@@ -24,7 +24,10 @@ WORKDIR /var/www
 COPY . /var/www
 
 # Nginx の設定ファイルを適切な場所にコピー
-COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
+
+# Nginx の設定ファイル内の環境変数を解決して配置
+RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
 # ポート 80 を公開
 EXPOSE 80
