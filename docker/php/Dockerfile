@@ -18,4 +18,5 @@ COPY . /var/www
 
 EXPOSE 80
 
-CMD ["php-fpm", "-D", "&&", "nginx", "-g", "daemon off;"]
+CMD ["php-fpm", "-D"]
+CMD ["nginx", "-g", "daemon off;"]
