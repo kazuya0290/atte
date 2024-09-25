@@ -1,37 +1,22 @@
-# ベースイメージを指定
-FROM php:8.2.10-fpm
+FROM php:7.4.9-fpm
 
-# 必要なパッケージのインストール
-RUN apt update \
-  && apt install -y default-mysql-client zlib1g-dev libzip-dev unzip \
-  && docker-php-ext-install pdo_mysql zip
+RUN apt-get update && apt-get install -y nginx
 
-# php.iniの設定
 COPY ./docker/php/php.ini /usr/local/etc/php/
 
-# Composerのインストール
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-  && composer self-update
+RUN apt-get update \
+    && apt-get install -y default-mysql-client zlib1g-dev libzip-dev unzip \
+    && docker-php-ext-install pdo_mysql zip
 
-# アプリケーションソースをコピー
-COPY ./src /var/www/html
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer \
+    && composer self-update
 
-WORKDIR /var/www/html
+WORKDIR /var/www
 
-# Composerで依存関係をインストール
-RUN composer install --no-dev --optimize-autoloader
+COPY . /var/www
 
-# アプリケーションキーの生成と設定
-RUN php artisan key:generate --no-interaction
-
-# アクセス権限は適宜変えてください。
-RUN chmod -R 777 ./ 
-
-# データベースのマイグレーション
-RUN php artisan migrate --force
-
-# ポートのエクスポート
+# Expose the port
 EXPOSE 80
 
-# Nginxを起動
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["php-fpm", "-D", "&&", "nginx", "-g", "daemon off;"]
