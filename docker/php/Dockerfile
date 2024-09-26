@@ -32,5 +32,4 @@ RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf
 # ポートを公開
 EXPOSE 80
 
-# Nginx と PHP-FPM を同時に起動
 CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
