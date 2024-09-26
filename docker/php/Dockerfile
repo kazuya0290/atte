@@ -36,9 +36,12 @@ COPY . /var/www
 
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
 
+COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
 CMD ["sh", "-c", "php-fpm -D && nginx"]
+
 
