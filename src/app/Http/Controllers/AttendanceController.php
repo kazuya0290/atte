@@ -13,6 +13,7 @@ class AttendanceController extends Controller
     public function index(Request $request)
     {
         $date = $request->input('date') ? Carbon::parse($request->input('date')) : Carbon::now();
+          $attendances = Attendance::paginate(5);
           $attendances = Attendance::whereDate('start_time', $date)->paginate(5);
         return view('attendance', [
             'attendances' => $attendances,
