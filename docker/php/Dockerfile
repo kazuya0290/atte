@@ -14,7 +14,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 WORKDIR /var/www
 
-#デプロイ用↓
+# デプロイ用↓
 
 # FROM php:7.4.9-fpm
 
