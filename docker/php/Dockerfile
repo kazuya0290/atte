@@ -18,11 +18,9 @@
 
 FROM php:7.4.9-fpm
 
-
 RUN apt-get update && apt-get install -y nginx gettext-base
 
 COPY ./docker/php/php.ini /usr/local/etc/php/
-
 
 RUN apt-get update \
     && apt-get install -y default-mysql-client zlib1g-dev libzip-dev unzip \
@@ -32,19 +30,15 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer self-update
 
-
 WORKDIR /var/www
-
 
 COPY . /var/www
 
-
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
-
 
 RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
-
 EXPOSE 80
 
-CMD ["sh", "-c", "php-fpm -D && nginx"] 
+CMD ["sh", "-c", "php-fpm -D && nginx"]
+
