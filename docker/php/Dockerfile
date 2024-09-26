@@ -18,7 +18,7 @@
 
 FROM php:7.4.9-fpm
 
-RUN apt-get update && apt-get install -y nginx gettext-base
+RUN apt-get update && apt-get install -y nginx gettext-base supervisor
 
 COPY ./docker/php/php.ini /usr/local/etc/php/
 
@@ -35,7 +35,6 @@ WORKDIR /var/www
 COPY . /var/www
 
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
-
 COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
@@ -43,5 +42,3 @@ RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf
 EXPOSE 80
 
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
-
