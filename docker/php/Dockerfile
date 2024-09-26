@@ -1,50 +1,50 @@
 #開発環境(localhost)↓
 
-FROM php:7.4.9-fpm
-
-COPY php.ini /usr/local/etc/php/
-
-RUN apt update \
-    && apt install -y default-mysql-client zlib1g-dev libzip-dev unzip \
-    && docker-php-ext-install pdo_mysql zip
-
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
-    && composer self-update
-
-WORKDIR /var/www
-
-# デプロイ用↓
-
 # FROM php:7.4.9-fpm
 
+# COPY php.ini /usr/local/etc/php/
 
-# RUN apt-get update && apt-get install -y nginx gettext-base
-
-# COPY ./docker/php/php.ini /usr/local/etc/php/
-
-
-# RUN apt-get update \
-#     && apt-get install -y default-mysql-client zlib1g-dev libzip-dev unzip \
+# RUN apt update \
+#     && apt install -y default-mysql-client zlib1g-dev libzip-dev unzip \
 #     && docker-php-ext-install pdo_mysql zip
 
 # RUN curl -sS https://getcomposer.org/installer | php \
 #     && mv composer.phar /usr/local/bin/composer \
 #     && composer self-update
 
-
 # WORKDIR /var/www
 
+# デプロイ用↓
 
-# COPY . /var/www
-
-
-# COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
+FROM php:7.4.9-fpm
 
 
-# RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+RUN apt-get update && apt-get install -y nginx gettext-base
+
+COPY ./docker/php/php.ini /usr/local/etc/php/
 
 
-# EXPOSE 80
+RUN apt-get update \
+    && apt-get install -y default-mysql-client zlib1g-dev libzip-dev unzip \
+    && docker-php-ext-install pdo_mysql zip
 
-# CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"] 
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer \
+    && composer self-update
+
+
+WORKDIR /var/www
+
+
+COPY . /var/www
+
+
+COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
+
+
+RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+
+
+EXPOSE 80
+
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"] 
