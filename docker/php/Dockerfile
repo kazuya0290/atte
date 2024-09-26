@@ -33,4 +33,4 @@ RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf
 EXPOSE 80
 
 # Nginx と PHP-FPM を同時に起動
-CMD ["sh", "-c", "php-fpm -D && env PORT=${PORT:-80} nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "php-fpm -D && envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
