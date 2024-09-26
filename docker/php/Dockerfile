@@ -29,8 +29,8 @@ COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
 # Nginx の設定ファイル内の環境変数を解決して配置
 RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
-# ポート 80 を公開
+# ポート 80 をデフォルトで公開しつつ、環境変数 PORT に対応
 EXPOSE 80
 
 # Nginx と PHP-FPM を同時に起動
-CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "php-fpm -D && env PORT=${PORT:-80} nginx -g 'daemon off;'"]
