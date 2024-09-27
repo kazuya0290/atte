@@ -53,12 +53,6 @@ RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf
 # ファイルのパーミッションを設定 (www-dataがファイルにアクセスできるように)
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Laravelのキャッシュと設定をクリア (デプロイ時のエラー防止のため)
-RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
-
 # 必要なポートを公開
 EXPOSE 80
 
