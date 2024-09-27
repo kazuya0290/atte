@@ -41,8 +41,8 @@ WORKDIR /var/www
 # ソースコードをコピー
 COPY . /var/www
 
-# PHPとComposerのバージョンを確認
-RUN php -v && composer -V
+# composer.jsonファイルが存在するか確認
+RUN ls -la /var/www && cat /var/www/composer.json
 
 # Composerで依存関係をインストール
 RUN composer clear-cache \
@@ -59,12 +59,6 @@ RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf
 
 # ファイルのパーミッションを設定 (www-dataがファイルにアクセスできるように)
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
-
-# Laravelのキャッシュと設定をクリア (必要な場合のみ)
-# RUN php artisan config:clear \
-#     && php artisan cache:clear \
-#     && php artisan route:clear \
-#     && php artisan view:clear
 
 # 必要なポートを公開
 EXPOSE 80
