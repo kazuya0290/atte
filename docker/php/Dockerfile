@@ -41,8 +41,12 @@ WORKDIR /var/www
 # ソースコードをコピー
 COPY . /var/www
 
+# PHPとComposerのバージョンを確認
+RUN php -v && composer -V
+
 # Composerで依存関係をインストール
-RUN composer install --no-dev --optimize-autoloader
+RUN composer clear-cache \
+    && composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
 
 # Nginxの設定ファイルをコピー
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
