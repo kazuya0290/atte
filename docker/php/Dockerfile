@@ -17,23 +17,26 @@
 # デプロイ用↓
 
 # ベースイメージとしてPHP 7.4 FPMを使用
-FROM php:7.4.9-fpm
+FROM php:7.4-fpm
 
 # 必要なパッケージをインストール
-RUN apt-get update && apt-get install -y nginx gettext-base supervisor
+RUN apt-get update && \
+    apt-get install -y nginx gettext-base supervisor && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # PHP設定ファイルのコピー
 COPY ./docker/php/php.ini /usr/local/etc/php/
 
 # MySQLクライアントやその他必要なパッケージをインストール
-RUN apt-get update \
-    && apt-get install -y default-mysql-client zlib1g-dev libzip-dev unzip \
-    && docker-php-ext-install pdo_mysql zip
+RUN apt-get update && \
+    apt-get install -y default-mysql-client zlib1g-dev libzip-dev unzip && \
+    docker-php-ext-install pdo_mysql zip
 
 # Composerをインストール
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
-    && composer self-update
+RUN curl -sS https://getcomposer.org/installer -o composer-installer.php && \
+    php composer-installer.php --install-dir=/usr/local/bin --filename=composer && \
+    composer --version && \
+    rm composer-installer.php
 
 # 環境変数を設定
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -44,12 +47,12 @@ WORKDIR /var/www
 # ソースコードをコピー
 COPY . /var/www
 
+# Composerで依存関係をインストール
+RUN composer clear-cache && \
+    composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
+
 # www-dataユーザーに切り替え
 USER www-data
-
-# Composerで依存関係をインストール
-RUN composer clear-cache \
-    && composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
 
 # Nginxの設定ファイルをコピー
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
