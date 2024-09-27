@@ -41,6 +41,9 @@ WORKDIR /var/www
 # ソースコードをコピー
 COPY . /var/www
 
+# Composerで依存関係をインストール
+RUN composer install --no-dev --optimize-autoloader
+
 # Nginxの設定ファイルをコピー
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
 
@@ -53,11 +56,12 @@ RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf
 # ファイルのパーミッションを設定 (www-dataがファイルにアクセスできるように)
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
-    
+# Laravelのキャッシュと設定をクリア (必要な場合のみ)
+# RUN php artisan config:clear \
+#     && php artisan cache:clear \
+#     && php artisan route:clear \
+#     && php artisan view:clear
+
 # 必要なポートを公開
 EXPOSE 80
 
