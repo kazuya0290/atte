@@ -35,14 +35,17 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer self-update
 
+# 環境変数を設定
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # 作業ディレクトリを設定
 WORKDIR /var/www
 
 # ソースコードをコピー
 COPY . /var/www
 
-# composer.jsonファイルが存在するか確認
-RUN ls -la /var/www
+# www-dataユーザーに切り替え
+USER www-data
 
 # Composerで依存関係をインストール
 RUN composer clear-cache \
@@ -57,7 +60,7 @@ COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # ポート環境変数を使ってNginxの設定ファイルを生成
 RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
-# ファイルのパーミッションを設定 (www-dataがファイルにアクセスできるように)
+# ファイルのパーミッションを設定
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
 # 必要なポートを公開
