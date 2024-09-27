@@ -16,61 +16,41 @@
 
 # デプロイ用↓
 
-# ベースイメージとしてPHP 7.4 FPMを使用
-FROM php:7.4-fpm
+# PHPのベースイメージを使用
+FROM php:8.0-fpm
 
-# 必要なパッケージをインストール
-RUN apt-get update && \
-    apt-get install -y nginx gettext-base supervisor && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Composerをインストールするための必要なパッケージをインストール
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libzip-dev \
+    && docker-php-ext-install zip pdo pdo_mysql
 
-# PHP設定ファイルのコピー
-COPY ./docker/php/php.ini /usr/local/etc/php/
+# Composerのインストール
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# MySQLクライアントやその他必要なパッケージをインストール
-RUN apt-get update && \
-    apt-get install -y default-mysql-client zlib1g-dev libzip-dev unzip && \
-    docker-php-ext-install pdo_mysql zip
-
-# Composerをインストール
-RUN curl -sS https://getcomposer.org/installer -o composer-installer.php && \
-    php composer-installer.php --install-dir=/usr/local/bin --filename=composer && \
-    composer --version && \
-    rm composer-installer.php
-
-# 環境変数を設定
-ENV COMPOSER_ALLOW_SUPERUSER=1
-
-# 作業ディレクトリを設定
+# 作業ディレクトリを指定 (Laravelプロジェクトのルートディレクトリ)
 WORKDIR /var/www
 
-# ソースコードをコピー
-COPY . /var/www
+# ローカルのプロジェクトファイルをコンテナにコピー
+COPY ./src /var/www
 
-# Composerで依存関係をインストール
-# (www-dataが実行できるように事前に権限を設定）
+# Laravelプロジェクトに必要な権限を設定
 RUN chown -R www-data:www-data /var/www && \
-    chmod -R 755 /var/www && \
-    composer clear-cache && \
+    chmod -R 755 /var/www
+
+# Composerのキャッシュをクリアしてインストールを実行
+RUN composer clear-cache && \
     composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
 
-# www-dataユーザーに切り替え
-USER www-data
+# キャッシュを削除した後に、Laravelのディレクトリ内で処理を行う
+RUN php artisan key:generate && \
+    php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache
 
-# Nginxの設定ファイルをコピー
-COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
+# ポートを開放
+EXPOSE 9000
 
-# Supervisorの設定ファイルをコピー
-COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# ポート環境変数を使ってNginxの設定ファイルを生成
-RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
-
-# ファイルのパーミッションを設定
-RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
-
-# 必要なポートを公開
-EXPOSE 80
-
-# Supervisorを使用してNginxとPHP-FPMを管理
-CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# PHP-FPMの起動
+CMD ["php-fpm"]
