@@ -29,6 +29,10 @@ RUN apt-get update && apt-get install -y \
 # Composerのインストール
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# 環境変数を設定
+ENV APP_ENV=local
+ENV APP_KEY=
+
 # 作業ディレクトリを指定 (Laravelプロジェクトのルートディレクトリ)
 WORKDIR /var/www
 
