@@ -38,7 +38,7 @@ WORKDIR /var/www
 
 # ローカルのプロジェクトファイルをコンテナにコピー
 COPY ./src /var/www 
-
+COPY ./src/.env.example /var/www/.env
 # Laravelプロジェクトに必要な権限を設定
 RUN chown -R www-data:www-data /var/www && \
     chmod -R 755 /var/www
