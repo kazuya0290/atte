@@ -48,7 +48,10 @@ WORKDIR /var/www
 COPY . /var/www
 
 # Composerで依存関係をインストール
-RUN composer clear-cache && \
+# (www-dataが実行できるように事前に権限を設定）
+RUN chown -R www-data:www-data /var/www && \
+    chmod -R 755 /var/www && \
+    composer clear-cache && \
     composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
 
 # www-dataユーザーに切り替え
