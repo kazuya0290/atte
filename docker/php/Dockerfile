@@ -50,7 +50,7 @@ RUN test -f /var/www/.env || { echo ".env file is missing"; exit 1; }
 # Laravelのキー生成とキャッシュクリアを実行
 RUN php artisan key:generate && \
     php artisan config:cache && \
-    php artisan route:cache && \
+    #php artisan route:cache && \
     php artisan view:cache
 
 # ポートを開放
