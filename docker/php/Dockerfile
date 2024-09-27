@@ -29,16 +29,13 @@ RUN apt-get update && apt-get install -y \
 # Composerのインストール
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 環境変数を設定
-ENV APP_ENV=local
-ENV APP_KEY=
-
 # 作業ディレクトリを指定 (Laravelプロジェクトのルートディレクトリ)
 WORKDIR /var/www
 
 # ローカルのプロジェクトファイルをコンテナにコピー
 COPY ./src /var/www 
 COPY ./src/.env.example /var/www/.env
+
 # Laravelプロジェクトに必要な権限を設定
 RUN chown -R www-data:www-data /var/www && \
     chmod -R 755 /var/www
@@ -47,7 +44,10 @@ RUN chown -R www-data:www-data /var/www && \
 RUN composer clear-cache && \
     composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
 
-# キャッシュを削除した後に、Laravelのディレクトリ内で処理を行う
+# .envファイルの確認
+RUN test -f /var/www/.env || { echo ".env file is missing"; exit 1; }
+
+# Laravelのキー生成とキャッシュクリアを実行
 RUN php artisan key:generate && \
     php artisan config:cache && \
     php artisan route:cache && \
