@@ -42,7 +42,7 @@ WORKDIR /var/www
 COPY . /var/www
 
 # composer.jsonファイルが存在するか確認
-RUN ls -la /var/www && cat /var/www/composer.json
+RUN ls -la /var/www
 
 # Composerで依存関係をインストール
 RUN composer clear-cache \
