@@ -16,28 +16,51 @@
 
 # デプロイ用↓
 
+# ベースイメージとしてPHP 7.4 FPMを使用
 FROM php:7.4.9-fpm
 
+# 必要なパッケージをインストール
 RUN apt-get update && apt-get install -y nginx gettext-base supervisor
 
+# PHP設定ファイルのコピー
 COPY ./docker/php/php.ini /usr/local/etc/php/
 
+# MySQLクライアントやその他必要なパッケージをインストール
 RUN apt-get update \
     && apt-get install -y default-mysql-client zlib1g-dev libzip-dev unzip \
     && docker-php-ext-install pdo_mysql zip
 
+# Composerをインストール
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer self-update
 
+# 作業ディレクトリを設定
 WORKDIR /var/www
+
+# ソースコードをコピー
 COPY . /var/www
 
+# Nginxの設定ファイルをコピー
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
+
+# Supervisorの設定ファイルをコピー
 COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# ポート環境変数を使ってNginxの設定ファイルを生成
 RUN envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
+# ファイルのパーミッションを設定 (www-dataがファイルにアクセスできるように)
+RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
+
+# Laravelのキャッシュと設定をクリア (デプロイ時のエラー防止のため)
+RUN php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan route:clear \
+    && php artisan view:clear
+
+# 必要なポートを公開
 EXPOSE 80
 
+# Supervisorを使用してNginxとPHP-FPMを管理
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
