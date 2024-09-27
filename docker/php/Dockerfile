@@ -33,8 +33,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 # ローカルのプロジェクトファイルをコンテナにコピー
-COPY ./src /var/www
-COPY ./.env /var/www/.env  
+COPY ./src /var/www 
 
 # Laravelプロジェクトに必要な権限を設定
 RUN chown -R www-data:www-data /var/www && \
