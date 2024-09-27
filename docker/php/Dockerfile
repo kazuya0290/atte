@@ -30,9 +30,8 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer self-update
 
-WORKDIR /opt/render/project/src
-
-COPY . /opt/render/project/src
+WORKDIR /var/www
+COPY . /var/www
 
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf.template
 COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
