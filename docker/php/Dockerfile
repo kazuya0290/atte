@@ -53,7 +53,7 @@ RUN php artisan key:generate && \
     php artisan view:cache
 
 # ポートを開放
-EXPOSE 9000
+EXPOSE 80
 
 # PHP-FPMの起動
 CMD ["php-fpm"]
