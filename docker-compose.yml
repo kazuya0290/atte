@@ -57,16 +57,16 @@ services:
       - php
 
   php:
-    build: ./docker/php
-    volumes:
-      - ./src:/var/www/
-    healthcheck:
-      test: ["CMD", "php-fpm", "-t"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      expose:
-      - "9000"
+  build: ./docker/php
+  volumes:
+    - ./src:/var/www/
+  healthcheck:
+    test: ["CMD", "php-fpm", "-t"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+  expose:
+    - "9000" # インデントを修正
   mysql:
     image: mysql:8.0.26
     environment:
