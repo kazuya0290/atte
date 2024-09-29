@@ -16,10 +16,10 @@
 
 # デプロイ用↓
 
-# PHPのベースイメージを使用
+#PHPのベースイメージを使用
 FROM php:8.0-fpm
 
-# 必要なパッケージのインストール
+# Composerをインストールするための必要なパッケージをインストール
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -29,15 +29,13 @@ RUN apt-get update && apt-get install -y \
 # Composerのインストール
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# COMPOSER_ALLOW_SUPERUSERを設定
-ENV COMPOSER_ALLOW_SUPERUSER=1
-
-# 作業ディレクトリを指定
+# 作業ディレクトリを指定 (Laravelプロジェクトのルートディレクトリ)
 WORKDIR /var/www
 
-# プロジェクトファイルをコンテナにコピー
+# ローカルのプロジェクトファイルをコンテナにコピー
 COPY ./src /var/www 
 COPY ./src/.env.example /var/www/.env
+
 # Laravelプロジェクトに必要な権限を設定
 RUN chown -R www-data:www-data /var/www && \
     chmod -R 755 /var/www
@@ -46,12 +44,15 @@ RUN chown -R www-data:www-data /var/www && \
 RUN composer clear-cache && \
     composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
 
-# init.shをコンテナにコピーして実行権限を付与
-COPY ./docker/php/init.sh /usr/local/bin/init.sh
-RUN chmod +x /usr/local/bin/init.sh
+# .envファイルの確認
+RUN test -f /var/www/.env || { echo ".env file is missing"; exit 1; }
 
+# Laravelのキー生成とキャッシュクリアを実行
+RUN php artisan key:generate && \
+    php artisan config:cache && \
+    php artisan view:cache
 # ポートを開放
-EXPOSE ${PORT:-80}
+EXPOSE 80
 
-# アプリケーションの初期化を行うスクリプトを実行
-CMD ["/usr/local/bin/init.sh"]
+# PHP-FPMの起動
+CMD ["php-fpm"]
