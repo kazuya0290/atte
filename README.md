@@ -8,6 +8,7 @@
 ・勤務開始後、「休憩開始」および「勤務終了」ボタンが使用可能になります。<br>
 ・休憩は1日に何度でも取ることができ、休憩時間は分単位で手動設定可能です。<br>
 ・過去の勤務時間もカレンダーを使用して確認可能です。
+<center><b></b>ホーム画面</center></b>
 ![ホーム画面](https://github.com/user-attachments/assets/e6f2e042-9e6f-4394-93b7-072780848120)
 ![タイマー画面](https://github.com/user-attachments/assets/9adff991-07b2-4e72-ad24-ccbb79c12c31)
 ![ログイン画面](https://github.com/user-attachments/assets/c0c4911a-7209-4fb4-a780-a020dee84018)
