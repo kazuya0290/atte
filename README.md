@@ -16,7 +16,7 @@
 ![ログイン画面](https://github.com/user-attachments/assets/c0c4911a-7209-4fb4-a780-a020dee84018)
                             <b>会員登録画面</b>
 ![会員登録画面](https://github.com/user-attachments/assets/53d94cc5-247f-4bdc-8462-2aed207b5fa0)
-                           </b>日付一覧画面</b>
+                             <b>日付一覧画面</b>
 ![日付一覧画面](https://github.com/user-attachments/assets/172e7ad9-9ecf-4be0-aea1-4acbdae60901)
 
 ## 作成した目的
