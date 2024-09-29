@@ -92,3 +92,38 @@ services:
 #       - mysql
 #     ports:
 #       - "8080:80"
+
+#デプロイ用2↓
+
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: laravel-app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - laravel
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - laravel
+
+networks:
+  laravel:
+
+volumes:
+  dbdata:
