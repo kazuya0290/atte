@@ -51,13 +51,16 @@ RUN composer clear-cache && \
 RUN test -f /var/www/.env || { echo ".env file is missing"; exit 1; }
 
 # Laravelのキー生成とキャッシュクリアを実行
-# ここではマイグレーションを実行しないようにする
 RUN php artisan key:generate || { echo "key:generate failed"; exit 1; } && \
     php artisan config:cache || { echo "config:cache failed"; exit 1; } && \
     php artisan view:cache || { echo "view:cache failed"; exit 1; }
 
-# ポートを開放
-EXPOSE 9000
+# init.shをコンテナにコピーして実行権限を付与
+COPY ./docker/php/init.sh /usr/local/bin/init.sh
+RUN chmod +x /usr/local/bin/init.sh
 
-# PHP-FPMの起動
-CMD ["php-fpm"]
+# マイグレーションとアプリケーションの初期化を行うスクリプトを実行
+CMD ["/usr/local/bin/init.sh"]
+
+# ポートを開放
+EXPOSE ${PORT:-80}
