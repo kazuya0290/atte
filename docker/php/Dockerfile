@@ -1,58 +1,58 @@
 #開発環境(localhost)↓
 
-# FROM php:7.4.9-fpm
+FROM php:7.4.9-fpm
 
-# COPY php.ini /usr/local/etc/php/
+COPY php.ini /usr/local/etc/php/
 
-# RUN apt update \
-#     && apt install -y default-mysql-client zlib1g-dev libzip-dev unzip \
-#     && docker-php-ext-install pdo_mysql zip
+RUN apt update \
+    && apt install -y default-mysql-client zlib1g-dev libzip-dev unzip \
+    && docker-php-ext-install pdo_mysql zip
 
-# RUN curl -sS https://getcomposer.org/installer | php \
-#     && mv composer.phar /usr/local/bin/composer \
-#     && composer self-update
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer \
+    && composer self-update
 
-# WORKDIR /var/www
+WORKDIR /var/www
 
 # デプロイ用↓
 
 #PHPのベースイメージを使用
-FROM php:8.0-fpm
+# FROM php:8.0-fpm
 
-# Composerをインストールするための必要なパッケージをインストール
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libzip-dev \
-    && docker-php-ext-install zip pdo pdo_mysql
+# # Composerをインストールするための必要なパッケージをインストール
+# RUN apt-get update && apt-get install -y \
+#     git \
+#     unzip \
+#     libzip-dev \
+#     && docker-php-ext-install zip pdo pdo_mysql
 
-# Composerのインストール
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# # Composerのインストール
+# COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 作業ディレクトリを指定 (Laravelプロジェクトのルートディレクトリ)
-WORKDIR /var/www
+# # 作業ディレクトリを指定 (Laravelプロジェクトのルートディレクトリ)
+# WORKDIR /var/www
 
-# ローカルのプロジェクトファイルをコンテナにコピー
-COPY ./src /var/www 
-COPY ./src/.env.example /var/www/.env
+# # ローカルのプロジェクトファイルをコンテナにコピー
+# COPY ./src /var/www 
+# COPY ./src/.env.example /var/www/.env
 
-# Laravelプロジェクトに必要な権限を設定
-RUN chown -R www-data:www-data /var/www && \
-    chmod -R 755 /var/www
+# # Laravelプロジェクトに必要な権限を設定
+# RUN chown -R www-data:www-data /var/www && \
+#     chmod -R 755 /var/www
 
-# Composerのキャッシュをクリアしてインストールを実行
-RUN composer clear-cache && \
-    composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
+# # Composerのキャッシュをクリアしてインストールを実行
+# RUN composer clear-cache && \
+#     composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
 
-# .envファイルの確認
-RUN test -f /var/www/.env || { echo ".env file is missing"; exit 1; }
+# # .envファイルの確認
+# RUN test -f /var/www/.env || { echo ".env file is missing"; exit 1; }
 
-# Laravelのキー生成とキャッシュクリアを実行
-RUN php artisan key:generate && \
-    php artisan config:cache && \
-    php artisan view:cache
-# ポートを開放
-EXPOSE 80
+# # Laravelのキー生成とキャッシュクリアを実行
+# RUN php artisan key:generate && \
+#     php artisan config:cache && \
+#     php artisan view:cache
+# # ポートを開放
+# EXPOSE 80
 
-# PHP-FPMの起動
-CMD ["php-fpm"]
+# # PHP-FPMの起動
+# CMD ["php-fpm"]
