@@ -37,7 +37,6 @@ WORKDIR /var/www
 
 # プロジェクトファイルをコンテナにコピー
 COPY ./src /var/www 
-COPY ./src/.env.example /var/www/.env
 
 # Laravelプロジェクトに必要な権限を設定
 RUN chown -R www-data:www-data /var/www && \
@@ -46,9 +45,6 @@ RUN chown -R www-data:www-data /var/www && \
 # Composerのキャッシュをクリアしてインストールを実行
 RUN composer clear-cache && \
     composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
-
-# .envファイルの確認
-RUN test -f /var/www/.env || { echo ".env file is missing"; exit 1; }
 
 # init.shをコンテナにコピーして実行権限を付与
 COPY ./docker/php/init.sh /usr/local/bin/init.sh
