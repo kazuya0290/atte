@@ -9,8 +9,17 @@ Atte勤怠管理システム
 勤務開始後、「休憩開始」および「勤務終了」ボタンが使用可能になります。
 休憩は1日に何度でも取ることができ、休憩時間は手動で分単位で設定可能です。
 過去の勤務時間もカレンダーを使用して確認可能です。
-画面一覧
-<center><b>ホーム画面</b></center> ![ホーム画面](https://github.com/user-attachments/assets/e6f2e042-9e6f-4394-93b7-072780848120) <center><b>タイマー画面</b></center> ![タイマー画面](https://github.com/user-attachments/assets/9adff991-07b2-4e72-ad24-ccbb79c12c31) <center><b>ログイン画面</b></center> ![ログイン画面](https://github.com/user-attachments/assets/c0c4911a-7209-4fb4-a780-a020dee84018) <center><b>会員登録画面</b></center> ![会員登録画面](https://github.com/user-attachments/assets/53d94cc5-247f-4bdc-8462-2aed207b5fa0) <center><b>日付一覧画面</b></center> ![日付一覧画面](https://github.com/user-attachments/assets/172e7ad9-9ecf-4be0-aea1-4acbdae60901)
+                               <b>ホーム画面</b>
+![ホーム画面](https://github.com/user-attachments/assets/e6f2e042-9e6f-4394-93b7-072780848120)
+                               <b>タイマー画面</b>
+![タイマー画面](https://github.com/user-attachments/assets/9adff991-07b2-4e72-ad24-ccbb79c12c31)
+                               <b>ログイン画面</b>
+![ログイン画面](https://github.com/user-attachments/assets/c0c4911a-7209-4fb4-a780-a020dee84018)
+                               <b>会員登録画面</b>
+![会員登録画面](https://github.com/user-attachments/assets/53d94cc5-247f-4bdc-8462-2aed207b5fa0)
+                                <b>日付一覧画面</b>
+![日付一覧画面](https://github.com/user-attachments/assets/172e7ad9-9ecf-4be0-aea1-4acbdae60901)
+
 作成した目的
 新規事業を立ち上げた企業向けの勤怠管理システムとして開発しました。
 このアプリを通じて、労務管理だけでなく、人事評価にも役立てることが可能です。
