@@ -50,17 +50,12 @@ RUN composer clear-cache && \
 # .envファイルの確認
 RUN test -f /var/www/.env || { echo ".env file is missing"; exit 1; }
 
-# Laravelのキー生成とキャッシュクリアを実行
-RUN php artisan key:generate || { echo "key:generate failed"; exit 1; } && \
-    php artisan config:cache || { echo "config:cache failed"; exit 1; } && \
-    php artisan view:cache || { echo "view:cache failed"; exit 1; }
-
 # init.shをコンテナにコピーして実行権限を付与
 COPY ./docker/php/init.sh /usr/local/bin/init.sh
 RUN chmod +x /usr/local/bin/init.sh
 
-# マイグレーションとアプリケーションの初期化を行うスクリプトを実行
-CMD ["/usr/local/bin/init.sh"]
-
 # ポートを開放
 EXPOSE ${PORT:-80}
+
+# アプリケーションの初期化を行うスクリプトを実行
+CMD ["/usr/local/bin/init.sh"]

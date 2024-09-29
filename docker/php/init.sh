@@ -6,4 +6,4 @@ php artisan config:cache || { echo "config:cache failed"; exit 1; }
 php artisan view:cache || { echo "view:cache failed"; exit 1; }
 
 # マイグレーションの実行
-php artisan migrate || { echo "migrate failed"; exit 1; }
+php artisan migrate --force || { echo "migrate failed"; exit 1; }
