@@ -19,21 +19,20 @@
 # PHPのベースイメージを使用
 FROM php:8.0-fpm
 
-# Composerをインストールするための必要なパッケージをインストール
+# 必要なパッケージのインストール
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
-    curl \
     && docker-php-ext-install zip pdo pdo_mysql
 
-# Composerをインストール
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Composerのインストール
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 作業ディレクトリを指定 (Laravelプロジェクトのルートディレクトリ)
+# 作業ディレクトリを指定
 WORKDIR /var/www
 
-# ローカルのプロジェクトファイルをコンテナにコピー
+# プロジェクトファイルをコンテナにコピー
 COPY ./src /var/www 
 COPY ./src/.env.example /var/www/.env
 
@@ -43,7 +42,7 @@ RUN chown -R www-data:www-data /var/www && \
 
 # Composerのキャッシュをクリアしてインストールを実行
 RUN composer clear-cache && \
-    composer install --no-dev --optimize-autoloader
+    composer install --no-dev --optimize-autoloader || { echo 'Composer install failed'; exit 1; }
 
 # .envファイルの確認
 RUN test -f /var/www/.env || { echo ".env file is missing"; exit 1; }
