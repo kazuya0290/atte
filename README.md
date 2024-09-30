@@ -76,10 +76,6 @@ DB_PASSWORD=laravel_pass<br>
 - 本番環境 : https://atte-dves.onrender.com <br>
 - phpMyAdmin:：http://localhost:8080/
 
-## その他<b>アプリケーションURL(特に本番環境について)</b>
-Dockerfile,default.conf,docker-compose.ymlファイルは開発環境と本番環境のコードに分けて記載してあります。通常は開発環境のコードを表示、本番環境のコードをコメントアウトしております。<br>また、Render.comは従量課金制の為、無料で利用するために通常はサービスを停止しております。採点の際はサービスをONにしますのでご連絡いただきますようよろしくお願いいたします。<br>
-メールアドレス: kzytty199120@yahoo.co.jp
-
-##　その他 <b>アプリケーションURL(特に本番環境について)</b>
+## その他　<b>アプリケーションURL(特に本番環境について)</b>
 Dockerfile,default.conf,docker-compose.ymlファイルは開発環境と本番環境のコードに分けて記載してあります。通常は開発環境のコードを表示、本番環境のコードをコメントアウトしております。<br>また、Render.comは従量課金制の為、無料で利用するために通常はサービスを停止しております。採点の際はサービスをONにしますのでご連絡いただきますようよろしくお願いいたします。<br>
 メールアドレス: kzytty199120@yahoo.co.jp
