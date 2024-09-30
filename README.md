@@ -25,8 +25,8 @@
 ## アプリケーションURL
 http://localhost/ (開発環境)<br>
 https://atte-dves.onrender.com デプロイ(本番環境)
-※Dockerfile,default.conf,docker-compose.ymlファイルは開発環境と本番環境のコードに分けて記載してあります。
-本番環境はコメントアウト。
+※Dockerfile,default.conf,docker-compose.ymlファイルは開発環境と本番環境のコードに分けて記載してあります。通常は開発環境のコードを表示、本番環境のコードをコメントアウトしております。<br>また、Render.comは従量課金制の為、無料で利用するために通常はサービスを停止しております。採点の際はサービスをONにしますのでご連絡いただきますようよろしくお願いいたします。<br>
+メールアドレス: kzytty199120@yahoo.co.jp
 ## 他のリポジトリ
 git@github.com:kazuya0290/atte.git<br>
 →　勤怠管理システム、認証機能を含むリポジトリです。
@@ -65,14 +65,15 @@ DB_HOST=mysql<br>
 DB_PORT=3306<br>
 DB_DATABASE=laravel_db<br>
 DB_USERNAME=laravel_user<br>
-DB_PASSWORD=laravel_pass
-5. アプリケーションキーの作成
-→　php artisan key:generate
-6. マイグレーションの実行
-→　php artisan migrate
-7. シーディングの実行
+DB_PASSWORD=laravel_pass<br>
+5. アプリケーションキーの作成<br>
+→　php artisan key:generate<br>
+6. マイグレーションの実行<br>
+→　php artisan migrate<br>
+7. シーディングの実行<br>
 →　php artisan db:seed
 
 ## URL
-- 開発環境：http://localhost/
+- 開発環境：http://localhost/ <br>
+- 本番環境 : https://atte-dves.onrender.com <br>
 - phpMyAdmin:：http://localhost:8080/
